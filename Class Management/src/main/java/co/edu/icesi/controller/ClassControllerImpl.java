@@ -4,12 +4,8 @@ import co.edu.icesi.dto.ClassesDTO;
 import co.edu.icesi.dto.ClassesResponseDTO;
 import co.edu.icesi.exceptions.NoTrainerFoundException;
 import co.edu.icesi.service.ClassService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,14 +22,6 @@ public class ClassControllerImpl implements ClassController {
     }
 
     @Override
-    @Operation(summary = "Programa una nueva clase", description = "Crea una nueva clase si hay un entrenador disponible.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Clase creada exitosamente"),
-            @ApiResponse(responseCode = "400", description = "No se pudo programar la clase, verifique los datos"),
-            @ApiResponse(responseCode = "401", description = "No autorizado, se requiere token válido"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado, se requieren permisos adecuados")
-    })
-    @PreAuthorize("hasAnyRole('USER_ROLE', 'ADMIN_ROLE')")
     @PostMapping
     public ResponseEntity<String> scheduleClass(@RequestBody ClassesDTO classDTO) {
         boolean wasCreated = false;
@@ -47,13 +35,6 @@ public class ClassControllerImpl implements ClassController {
     }
 
     @Override
-    @Operation(summary = "Obtiene todas las clases", description = "Retorna una lista de todas las clases registradas.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Lista de clases obtenida exitosamente"),
-            @ApiResponse(responseCode = "401", description = "No autorizado, se requiere token válido"),
-            @ApiResponse(responseCode = "403", description = "Acceso denegado, solo administradores pueden ver las clases")
-    })
-    @PreAuthorize("hasRole('ADMIN_ROLE')")
     @GetMapping
     public ResponseEntity<List<ClassesResponseDTO>> getClasses() {
         List<ClassesResponseDTO> classes = classService.getClasses();
